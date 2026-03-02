@@ -31,9 +31,10 @@ app.get('/test', (req, res) => {
 })
 
 app.post('/send-email', async (req, res) => {
+    console.log("EMAIL REQUEST:", req.body)
   try {
     const { name, email, phone, message } = req.body
-
+    console.log("SENDING EMAIL TO:", process.env.EMAIL_USER)
     await transporter.sendMail({
       from: `"Prop-Insure Hub" <${process.env.EMAIL_USER}>`,
       to: process.env.EMAIL_USER,
@@ -59,6 +60,8 @@ app.post('/send-email', async (req, res) => {
 })
 console.log('EMAIL:', process.env.EMAIL_USER)
 console.log('PASS:', process.env.EMAIL_PASS)
+console.log('PORT:', process.env.PORT)
+console.log('RECIEVER:', process.env.TARGET_MAIL)
 
 const PORT = process.env.PORT || 5000
 
