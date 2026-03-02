@@ -21,12 +21,12 @@ app.get('/test', (req, res) => {
 })
 
 app.post('/send-email', async (req, res) => {
-  const { name, email, phone, message } = req.body
-
   try {
+    const { name, email, phone, message } = req.body
+
     await transporter.sendMail({
       from: `"Prop-Insure Hub" <${process.env.EMAIL_USER}>`,
-      to: process.env.TARGET_MAIL,
+      to: process.env.EMAIL_USER,
       subject: 'New Contact Form Submission',
       html: `
         <h2>New Lead</h2>
@@ -39,8 +39,12 @@ app.post('/send-email', async (req, res) => {
 
     res.status(200).json({ success: true })
   } catch (error) {
-    console.error(error)
-    res.status(500).json({ success: false })
+    console.error("EMAIL ERROR:", error)
+
+    res.status(500).json({
+      success: false,
+      error: error.message
+    })
   }
 })
 console.log('EMAIL:', process.env.EMAIL_USER)
