@@ -16,6 +16,9 @@ const transporter = nodemailer.createTransport({
     pass: process.env.EMAIL_PASS,
   },
 })
+app.get('/test', (req, res) => {
+  res.send('CORS working')
+})
 
 app.post('/send-email', async (req, res) => {
   const { name, email, phone, message } = req.body
