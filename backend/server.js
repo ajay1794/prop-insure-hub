@@ -1,5 +1,5 @@
 const express = require('express')
-const nodemailer = require('nodemailer')
+const { Resend } = require('resend')
 const cors = require('cors')
 require('dotenv').config()
 
@@ -11,33 +11,20 @@ app.use(cors({
 const dns = require('dns')
 dns.setDefaultResultOrder('ipv4first')
 
+const resend = new Resend(process.env.RESEND_API_KEY)
 app.use(express.json())
 
-const transporter = nodemailer.createTransport({
-  host: 'smtp.gmail.com',
-  port: 587,
-  secure: false,
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-  tls: {
-    rejectUnauthorized: false,
-  },
-  family: 4,
-})
 app.get('/test', (req, res) => {
   res.send('CORS working')
 })
 
 app.post('/send-email', async (req, res) => {
-    console.log("EMAIL REQUEST:", req.body)
   try {
     const { name, email, phone, message } = req.body
-    console.log("SENDING EMAIL TO:", process.env.EMAIL_USER)
-    await transporter.sendMail({
-      from: `"Prop-Insure Hub" <${process.env.EMAIL_USER}>`,
-      to: process.env.EMAIL_USER,
+
+    await resend.emails.send({
+      from: 'onboarding@resend.dev',
+      to: process.env.TARGET_MAIL,
       subject: 'New Contact Form Submission',
       html: `
         <h2>New Lead</h2>
@@ -51,11 +38,7 @@ app.post('/send-email', async (req, res) => {
     res.status(200).json({ success: true })
   } catch (error) {
     console.error("EMAIL ERROR:", error)
-
-    res.status(500).json({
-      success: false,
-      error: error.message
-    })
+    res.status(500).json({ success: false })
   }
 })
 console.log('EMAIL:', process.env.EMAIL_USER)
