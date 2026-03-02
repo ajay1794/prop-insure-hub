@@ -7,16 +7,24 @@ const app = express()
 app.use(cors({
   origin: '*'
 }))
+
+const dns = require('dns')
+dns.setDefaultResultOrder('ipv4first')
+
 app.use(express.json())
 
 const transporter = nodemailer.createTransport({
   host: 'smtp.gmail.com',
   port: 587,
-  secure: false, // IMPORTANT (false for 587)
+  secure: false,
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
   },
+  tls: {
+    rejectUnauthorized: false,
+  },
+  family: 4,
 })
 app.get('/test', (req, res) => {
   res.send('CORS working')
