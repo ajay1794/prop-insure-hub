@@ -24,7 +24,7 @@ app.post('/send-email', async (req, res) => {
     console.log("sending mail to:", process.env.TARGET_MAIL)
 
     await resend.emails.send({
-      from: 'onboarding@resend.dev',
+      from: 'Prop-Insure Hub <onboarding@resend.dev>',
       to: process.env.TARGET_MAIL,
       subject: 'New Contact Form Submission',
       html: `
