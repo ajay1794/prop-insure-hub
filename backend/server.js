@@ -21,6 +21,7 @@ app.get('/test', (req, res) => {
 app.post('/send-email', async (req, res) => {
   try {
     const { name, email, phone, message } = req.body
+    console.log("sending mail to:", process.env.TARGET_MAIL)
 
     await resend.emails.send({
       from: 'onboarding@resend.dev',
